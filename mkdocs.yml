@@ -1,0 +1,14 @@
+site_name: 合和天下-新零售分润系统开发文档
+site_author: 辛天宇 tianyurui@gmail.com
+
+
+nav:
+  - 从这里开始: index.md
+  - 签名算法规定: signdocs.md
+  - 账户系统文档: accountdocs.md
+  - 支付系统文档: paydocs.md
+
+theme:
+  name: bootstrap
+
+dev_addr: 127.0.0.1:8001
