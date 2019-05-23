@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="辛天宇 tianyurui@gmail.com">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>签名算法规定 - 合和天下-新零售分润系统开发文档</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-1.10.2.min.js" defer></script>
+    <script src="../js/bootstrap-3.3.7.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">合和天下-新零售分润系统开发文档</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">从这里开始</a>
+                            </li>
+                            <li class="active">
+                                <a href="./">签名算法规定</a>
+                            </li>
+                            <li >
+                                <a href="../accountdocs/">账户系统文档</a>
+                            </li>
+                            <li >
+                                <a href="../paydocs/">支付系统文档</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li >
+                                <a rel="next" href="..">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../accountdocs/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#_1">开发建议</a></li>
+        <li class="main "><a href="#_2">签名作用</a></li>
+        <li class="main "><a href="#_3">需要准备的参数</a></li>
+        <li class="main "><a href="#_4">签名算法</a></li>
+        <li class="main "><a href="#_5">签名算法示例</a></li>
+            <li><a href="#php">PHP</a></li>
+            <li><a href="#java">JAVA</a></li>
+            <li><a href="#c">C#</a></li>
+            <li><a href="#python-3">Python 3</a></li>
+            <li><a href="#go">Go</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="_1">开发建议</h2>
+<p>合和天下所有接口都是 https 协议，证书出自正规 CA 签发。<strong>建议请求的时进行证书验证。</strong></p>
+<h2 id="_2">签名作用</h2>
+<ol>
+<li>
+<p>传输中，防篡改。</p>
+</li>
+<li>
+<p>给合和天下服务器，确定身份。</p>
+</li>
+</ol>
+<h2 id="_3">需要准备的参数</h2>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+<th>来源</th>
+<th>类型</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tim</td>
+<td>当前时间戳，以秒为单位的整数<strong>字符串</strong></td>
+<td>自己获取</td>
+<td>字符串</td>
+<td>-</td>
+</tr>
+<tr>
+<td>alg</td>
+<td>签名算法</td>
+<td>固定参数</td>
+<td>字符串</td>
+<td>HS256</td>
+</tr>
+<tr>
+<td>uid</td>
+<td>uid</td>
+<td>申请开发者账号后获取</td>
+<td>字符串</td>
+<td>-</td>
+</tr>
+<tr>
+<td>client_key</td>
+<td>签名算法的密码(客户端，请求时用)</td>
+<td>申请开发者账号后获取</td>
+<td>字符串</td>
+<td>-</td>
+</tr>
+<tr>
+<td>server_key</td>
+<td>签名算法的密码(服务端，接收响应时验证)</td>
+<td>申请开发者账号后获取</td>
+<td>字符串</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">签名算法</h2>
+<ol>
+<li>
+<p>头信息： headerStr={"uid": "123456", "tim": "1558079861", "alg": "HS256"}，请使用标准的 JSON 字符串格式。服务器会严格校验格式。tim 参数请取当前时间戳，为整数字符串。</p>
+</li>
+<li>
+<p>请求 body 信息（POST 方法有，GET 方法为空）bodyStr </p>
+</li>
+<li>
+<p>sign = hmacSHA256((headerStr + bodyStr), key)，hmacSha256 的算法下面有示例</p>
+</li>
+<li>
+<p>auth = base64encode(headerStr) + "." + sign</p>
+</li>
+<li>
+<p>将 auth 放在 HTTP Authorization 头信息中(注意 Bearer 后有一个空格)，如下：</p>
+<pre><code>Authorization: Bearer auth
+</code></pre>
+</li>
+<li>
+<p>系统暂时只支持 HS256 算法，具体实现示例如下。</p>
+</li>
+</ol>
+<h2 id="_5">签名算法示例</h2>
+<h3 id="php">PHP</h3>
+<pre><code>$s = hash_hmac('sha256', 'Message', 'secret', true);
+echo base64_encode($s);
+</code></pre>
+<h3 id="java">JAVA</h3>
+<pre><code>import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Base64;
+
+public class ApiSecurityExample {
+    public static void main(String[] args) {
+        try {
+            String secret = "secret";
+            String message = "Message";
+
+            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+            sha256HMAC.init(secretKey);
+
+            String hash = Base64.encodeBase64String(sha256HMAC.doFinal(message.getBytes()));
+            System.out.println(hash);
+        }
+        catch (Exception e){
+           System.out.println("Error");
+        }
+    }
+}
+</code></pre>
+<h3 id="c">C#</h3>
+<pre><code>using System.Security.Cryptography;
+
+namespace Test
+{
+    public class MyHmac
+    {
+        private string CreateToken(string message, string secret)
+        {
+            secret = secret ?? "";
+            var encoding = new System.Text.ASCIIEncoding();
+            byte[] keyByte = encoding.GetBytes(secret);
+            byte[] messageBytes = encoding.GetBytes(message);
+            using (var hmacsha256 = new HMACSHA256(keyByte))
+            {
+                byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);
+                return Convert.ToBase64String(hashmessage);
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="python-3">Python 3</h3>
+<pre><code>import hashlib
+import hmac
+import base64
+
+message = bytes('Message', 'utf-8')
+secret = bytes('secret', 'utf-8')
+
+signature = base64.b64encode(hmac.new(secret, message, digestmod=hashlib.sha256).digest())
+print(signature)
+</code></pre>
+<h3 id="go">Go</h3>
+<pre><code>package main
+
+import (
+    "crypto/hmac"
+    "crypto/sha256"
+    "encoding/base64"
+    "fmt"
+)
+
+func ComputeHmac256(message string, secret string) string {
+    key := []byte(secret)
+    h := hmac.New(sha256.New, key)
+    h.Write([]byte(message))
+    return base64.StdEncoding.EncodeToString(h.Sum(nil))
+}
+
+func main() {
+    fmt.Println(ComputeHmac256("Message", "secret"))
+}
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

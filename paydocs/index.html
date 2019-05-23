@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="辛天宇 tianyurui@gmail.com">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>支付系统文档 - 合和天下-新零售分润系统开发文档</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-1.10.2.min.js" defer></script>
+    <script src="../js/bootstrap-3.3.7.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="..">合和天下-新零售分润系统开发文档</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="..">从这里开始</a>
+                            </li>
+                            <li >
+                                <a href="../signdocs/">签名算法规定</a>
+                            </li>
+                            <li >
+                                <a href="../accountdocs/">账户系统文档</a>
+                            </li>
+                            <li class="active">
+                                <a href="./">支付系统文档</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li >
+                                <a rel="next" href="../accountdocs/">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="disabled">
+                                <a rel="prev" >
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#-">合和天下-支付系统开发文档</a></li>
+            <li><a href="#1-">1. 收款-消费者扫码（动态码，不限制额度）</a></li>
+            <li><a href="#2-">2. 收款-商户扫码</a></li>
+            <li><a href="#3-">3. 收款-静态二维码</a></li>
+            <li><a href="#4">4. 清分</a></li>
+            <li><a href="#5">5. 提现（对私）</a></li>
+            <li><a href="#6">6. 提现（对公）</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="-">合和天下-支付系统开发文档</h1>
+<h2 id="1-">1. 收款-消费者扫码（动态码，不限制额度）</h2>
+<h3 id="11">1.1 业务流程</h3>
+<p>收款方使用该接口生成二维码，付款方使用支付工具（支付宝、微信）扫描该二维码，即可完成支付。</p>
+<h3 id="12">1.2 接口详情</h3>
+<h4 id="_1">请求方法</h4>
+<p>POST</p>
+<h4 id="_2">请求路径</h4>
+<p>/paysys/v1/csancb</p>
+<h4 id="body">请求 Body</h4>
+<pre><code>{
+    "data":{
+        "unionId":"yourId",
+        "clientSn":"200101040005",
+        "amount":"2000",
+        "payWay":"1",
+        "notifyUrl":"yourNotifyUrl"
+        },
+    "sign":"yourSign"
+}
+</code></pre>
+<h4 id="_3">请求参数说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unionId</td>
+<td>string</td>
+<td>唯一身份标识</td>
+<td>-</td>
+</tr>
+<tr>
+<td>clientSn</td>
+<td>string</td>
+<td>订单编号，一个编号的订单，只会被处理一次</td>
+<td>-</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>string</td>
+<td>收款金额，注意单位是：分</td>
+<td>2000 代表 20.00 元。</td>
+</tr>
+<tr>
+<td>payWay</td>
+<td>string</td>
+<td>支付渠道</td>
+<td>规定"1"代表支付宝，"2"代表微信支付</td>
+</tr>
+<tr>
+<td>notifyUrl</td>
+<td>string</td>
+<td>支付结果回调通知地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>string</td>
+<td>本次请求的签名，后端会严格核验签名。签名算法见文档</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_4">返回数据格式</h4>
+<pre><code>    {
+        "data":{
+            "s":"success",
+            "m":"成功",
+            "d":{
+                "qrCodeString":"https://www.hehetxianxia.com/qrcodeurl"
+            }
+        },
+        "sign":""
+    }
+</code></pre>
+<h4 id="_5">返回数据说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s</td>
+<td>string</td>
+<td>status 的缩写，状态标识</td>
+<td>success 代表请求成功，fail 代表失败</td>
+</tr>
+<tr>
+<td>m</td>
+<td>string</td>
+<td>message的缩写，当 s 的值为 fail 的时候，会提示失败原因</td>
+<td>-</td>
+</tr>
+<tr>
+<td>qrCodeString</td>
+<td>string</td>
+<td>生成的二维码内容，使用时要将该值转换成二维码图片</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-">2. 收款-商户扫码</h2>
+<h3 id="21">2.1 业务流程</h3>
+<p>解析用户出示的二维码，进行扣款。</p>
+<h3 id="22">2.2 接口详情</h3>
+<h4 id="_6">请求方法</h4>
+<p>POST</p>
+<h4 id="_7">请求路径</h4>
+<p>/paysys/v1/bscanc</p>
+<h4 id="body_1">请求 Body</h4>
+<pre><code>{
+    "data":{
+        "unionId":"yourId",
+        "clientSn":"200101040005",
+        "amount":"2000",
+        "payWay":"1",
+        "notifyUrl":"yourNotifyUrl"
+        },
+    "sign":"yourSign"
+}
+</code></pre>
+<h4 id="_8">请求参数说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unionId</td>
+<td>string</td>
+<td>唯一身份标识</td>
+<td>-</td>
+</tr>
+<tr>
+<td>clientSn</td>
+<td>string</td>
+<td>订单编号，一个编号的订单，只会被处理一次</td>
+<td>-</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>string</td>
+<td>收款金额，注意单位是：分</td>
+<td>2000 代表 20.00 元。</td>
+</tr>
+<tr>
+<td>payWay</td>
+<td>string</td>
+<td>支付渠道</td>
+<td>规定"1"代表支付宝，"2"代表微信支付</td>
+</tr>
+<tr>
+<td>notifyUrl</td>
+<td>string</td>
+<td>支付结果回调通知地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>string</td>
+<td>本次请求的签名，后端会严格核验签名。签名算法见文档</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_9">返回数据格式</h4>
+<pre><code>{
+    "s":"success",
+    "m":"成功",
+    "d": null 
+}
+</code></pre>
+<h4 id="_10">返回数据说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s</td>
+<td>string</td>
+<td>status 的缩写，状态标识</td>
+<td>success 代表请求成功，fail 代表失败</td>
+</tr>
+<tr>
+<td>m</td>
+<td>string</td>
+<td>message的缩写，当 s 的值为 fail 的时候，会提示失败原因</td>
+<td>-</td>
+</tr>
+<tr>
+<td>qrCodeString</td>
+<td>string</td>
+<td>生成的二维码内容，使用时要将该值转换成二维码图片</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-">3. 收款-静态二维码</h2>
+<h3 id="31">3.1 业务流程</h3>
+<p>生成静态聚合支付的二维码。</p>
+<h3 id="32">3.2 接口详情</h3>
+<h4 id="_11">请求方法</h4>
+<p>POST</p>
+<h4 id="_12">请求路径</h4>
+<p>/paysys/v1/static_qrcode</p>
+<h4 id="body_2">请求 Body</h4>
+<pre><code>{"作业中"}
+</code></pre>
+<h4 id="_13">请求参数说明</h4>
+<h4 id="_14">返回数据格式</h4>
+<h4 id="_15">返回数据说明</h4>
+<h2 id="4">4. 清分</h2>
+<h3 id="41">4.1 业务流程</h3>
+<p>开发者使用该接口可将账户中的余额清分到指定子账户（清分到子账户的余额可以使用提现接口，提现到指定银行卡）。</p>
+<ol>
+<li>n% 作为清分的费用，在清分成功后，会扣除。</li>
+<li>清分金额之和不能大于总清分金额的 (100 - n)%。</li>
+<li>如果 100 元进行清分，最多能清分 100 * (100 - n)% 元到子账户。</li>
+<li>如果 100 元进行清分，实际的清分金额为小于 100 * （100 - n）%，扣除 n% 的费用后，其他的金额会返还。</li>
+<li>清分的子账户如果不存在，则会自动创建。</li>
+</ol>
+<h3 id="42">4.2 接口详情</h3>
+<h4 id="_16">请求方法</h4>
+<p>POST</p>
+<h4 id="_17">请求路径</h4>
+<p>/paysys/v1/share</p>
+<h4 id="body_3">请求 Body</h4>
+<pre><code>{
+    "data":{
+        "unionId":"yourId",
+        "shareSn":"201905050042",
+        "shareAmount":"20000",
+        "shareTarget":[{
+            "phone":"134****9876",
+            "shareAmount":"600",
+            "message":"邀请人分润",
+        },{
+            "phone":"13322131456",
+            "shareAmount":"12000",
+            "message":"商户成本收入",
+        },{
+            "phone":"13678643421",
+            "shareAmount":"12000",
+            "message":"代理邀请人分润",
+        },
+        ],
+    },
+    "sign":"yourSign"
+}
+</code></pre>
+<h4 id="_18">请求参数说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unionId</td>
+<td>string</td>
+<td>唯一身份标识</td>
+<td>-</td>
+</tr>
+<tr>
+<td>shareSn</td>
+<td>string</td>
+<td>订单编号，同一个编号的清分请求，只会处理第一个</td>
+<td>-</td>
+</tr>
+<tr>
+<td>shareAmount</td>
+<td>string</td>
+<td>用来清分的总金额，单位是：分</td>
+<td>2000 代表 20.00 元。</td>
+</tr>
+<tr>
+<td>shareTarget</td>
+<td>string</td>
+<td>清分的目标用户</td>
+<td>-</td>
+</tr>
+<tr>
+<td>payWay</td>
+<td>string</td>
+<td>支付渠道</td>
+<td>规定"1"代表支付宝，"2"代表微信支付</td>
+</tr>
+<tr>
+<td>notifyUrl</td>
+<td>string</td>
+<td>支付结果回调通知地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>string</td>
+<td>本次请求的签名，后端会严格核验签名。签名算法见文档</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_19">返回数据格式</h4>
+<pre><code>{
+    "data":{
+        "s":"success",
+        "m":"成功",
+        "d":{
+            "result":[
+                {
+                    "phone":"134****9876",
+                    "balance":"600"
+                },
+                {
+                    "phone":"13322131456",
+                    "balance":"12000"
+                },
+                {
+                    "phone":"13678643421",
+                    "balance":"12000"
+                }
+            ]
+        }
+    },
+    "sign":""
+}
+</code></pre>
+<h4 id="_20">返回数据说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s</td>
+<td>string</td>
+<td>status 的缩写，状态标识</td>
+<td>success 代表请求成功，fail 代表失败</td>
+</tr>
+<tr>
+<td>m</td>
+<td>string</td>
+<td>message的缩写，当 s 的值为 fail 的时候，会提示失败原因</td>
+<td>-</td>
+</tr>
+<tr>
+<td>result</td>
+<td>list</td>
+<td>返回清分成功后各个子账户的余额</td>
+<td>-</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>string</td>
+<td>子账户手机号</td>
+<td>-</td>
+</tr>
+<tr>
+<td>balance</td>
+<td>string</td>
+<td>子账户当前余额</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5">5. 提现（对私）</h2>
+<h3 id="51">5.1 业务流程</h3>
+<p>主账户的余额暂时不支持提现，必需使用清分接口将金额分到子账户后，才可以提现。</p>
+<ol>
+<li>提现成功后，不能退款，请自行核对银行卡等信息。</li>
+<li>款项一般为实时到账，如果遇到银行的结算时间，可能会略有延迟。</li>
+<li>提现失败的大部分原因是：卡号、持卡人名称填写错误导致。</li>
+</ol>
+<h3 id="52">5.2 接口详情</h3>
+<h4 id="_21">请求方法</h4>
+<p>POST</p>
+<h4 id="_22">请求路径</h4>
+<p>/paysys/v1/withdraw</p>
+<h4 id="body_4">请求 Body</h4>
+<pre><code>{
+    "data":{
+        "unionId":"yourId",
+        "clientSn":"200101040005",
+        "notifyUrl":"yourNotifyUrl",
+        "withDraw":[
+            {
+                "phone":"13145678901",
+                "bankCode":"1000767281",
+                "accountNo":"***********",
+                "payeeName":"持有人",
+                "amount":"1300"
+            },
+            {
+                "phone":"13145678901",
+                "bankCode":"1000767281",
+                "accountNo":"***********",
+                "payeeName":"持有人2",
+                "amount":"700"
+            }
+        ]
+    },
+    "sign":"yourSign"
+}
+</code></pre>
+<h4 id="_23">请求参数说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unionId</td>
+<td>string</td>
+<td>唯一身份标识</td>
+<td>-</td>
+</tr>
+<tr>
+<td>clientSn</td>
+<td>string</td>
+<td>订单编号，一个编号的订单，只会被处理一次</td>
+<td>-</td>
+</tr>
+<tr>
+<td>notifyUrl</td>
+<td>string</td>
+<td>结果回调通知地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>string</td>
+<td>子账号的手机号，请确保子账户的余额不小于提现金额</td>
+<td>-</td>
+</tr>
+<tr>
+<td>bankCode</td>
+<td>string</td>
+<td>银行码，请参考“银行码对照表”</td>
+<td>-</td>
+</tr>
+<tr>
+<td>accountNo</td>
+<td>string</td>
+<td>银行卡号</td>
+<td>-</td>
+</tr>
+<tr>
+<td>payeeName</td>
+<td>string</td>
+<td>持卡人姓名</td>
+<td>-</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>string</td>
+<td>提现的金额，注意单位是“分”</td>
+<td>-</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>string</td>
+<td>本次请求的签名，后端会严格核验签名。签名算法见文档</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_24">返回数据格式</h4>
+<pre><code>{
+    "data":{
+        "s":"success",
+        "m":"成功",
+        "d":{
+            "result":[
+                {
+                    "phone":"134****9876",
+                    "balance":"600"
+                },
+                {
+                    "phone":"13322131456",
+                    "balance":"12000"
+                },
+                {
+                    "phone":"13678643421",
+                    "balance":"12000"
+                }
+            ]
+        }
+    },
+    "sign":""
+}
+</code></pre>
+<h4 id="_25">返回数据说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s</td>
+<td>string</td>
+<td>status 的缩写，状态标识</td>
+<td>success 只是代表请求的成功，不代表提现到账成功</td>
+</tr>
+<tr>
+<td>m</td>
+<td>string</td>
+<td>message的缩写，当 s 的值为 fail 的时候，会提示失败原因</td>
+<td>-</td>
+</tr>
+<tr>
+<td>data</td>
+<td>list</td>
+<td>返回提现成功后各个子账户的余额。如果确认提现失败，余额会退回当相应账户</td>
+<td>-</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>string</td>
+<td>子账户手机号</td>
+<td>-</td>
+</tr>
+<tr>
+<td>balance</td>
+<td>string</td>
+<td>子账户当前余额</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6">6. 提现（对公）</h2>
+<h3 id="61">6.1 业务流程</h3>
+<p>主账户的余额暂时不支持提现，必需使用清分接口将金额分到子账户后，才可以提现。</p>
+<ol>
+<li>提现成功后，不能退款，请自行核对银行卡等信息。</li>
+<li>款项一般为实时到账，如果遇到银行的结算时间，可能会略有延迟。</li>
+<li>提现失败的大部分原因是：卡号、持卡人名称填写错误导致。</li>
+</ol>
+<h3 id="62">6.2 接口详情</h3>
+<h4 id="_26">请求方法</h4>
+<p>POST</p>
+<h4 id="_27">请求路径</h4>
+<p>/paysys/v1/withdraw</p>
+<h4 id="body_5">请求 Body</h4>
+<pre><code>{
+    "data":{
+        "unionId":"yourId",
+        "clientSn":"200101040005",
+        "notifyUrl":"yourNotifyUrl",
+        "withDraw":[
+            {
+                "phone":"13145678901",
+                "bankCode":"1000767281",
+                "accountNo":"***********",
+                "payeeName":"持有人",
+                "amount":"1300"
+            },
+            {
+                "phone":"13145678901",
+                "bankCode":"1000767281",
+                "accountNo":"***********",
+                "payeeName":"持有人2",
+                "amount":"700"
+            }
+        ]
+    },
+    "sign":"yourSign"
+}
+</code></pre>
+<h4 id="_28">请求参数说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unionId</td>
+<td>string</td>
+<td>唯一身份标识</td>
+<td>-</td>
+</tr>
+<tr>
+<td>clientSn</td>
+<td>string</td>
+<td>订单编号，一个编号的订单，只会被处理一次</td>
+<td>-</td>
+</tr>
+<tr>
+<td>notifyUrl</td>
+<td>string</td>
+<td>支付结果回调通知地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>string</td>
+<td>子账号的手机号，请确保子账户的余额不小于提现金额</td>
+<td>-</td>
+</tr>
+<tr>
+<td>bankCode</td>
+<td>string</td>
+<td>银行码，请参考“银行码对照表”</td>
+<td>-</td>
+</tr>
+<tr>
+<td>accountNo</td>
+<td>string</td>
+<td>银行卡号</td>
+<td>-</td>
+</tr>
+<tr>
+<td>payeeName</td>
+<td>string</td>
+<td>持卡人姓名</td>
+<td>-</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>string</td>
+<td>提现的金额，注意单位是“分”</td>
+<td>-</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>string</td>
+<td>本次请求的签名，后端会严格核验签名。签名算法见文档</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_29">返回数据格式</h4>
+<pre><code>{
+    "data":{
+        "s":"success",
+        "m":"成功",
+        "d":{
+            "result":[
+                {
+                    "phone":"134****9876",
+                    "balance":"600"
+                },
+                {
+                    "phone":"13322131456",
+                    "balance":"12000"
+                },
+                {
+                    "phone":"13678643421",
+                    "balance":"12000"
+                }
+            ]
+        }
+    },
+    "sign":""
+}
+</code></pre>
+<h4 id="_30">返回数据说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>类型</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s</td>
+<td>string</td>
+<td>status 的缩写，状态标识，即使返回成功代表银行已经接受这笔转账，如果转账失败，款项会原路退回</td>
+<td>success 只是代表请求的成功，不代表提现到账成功</td>
+</tr>
+<tr>
+<td>m</td>
+<td>string</td>
+<td>message的缩写，当 s 的值为 fail 的时候，会提示失败原因</td>
+<td>-</td>
+</tr>
+<tr>
+<td>result</td>
+<td>list</td>
+<td>返回提现成功后各个子账户的余额。如果确认提现失败，余额会退回当相应账户</td>
+<td>-</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>string</td>
+<td>子账户手机号</td>
+<td>-</td>
+</tr>
+<tr>
+<td>balance</td>
+<td>string</td>
+<td>子账户当前余额</td>
+<td>-</td>
+</tr>
+</tbody>
+</table></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
